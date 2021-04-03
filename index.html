@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+	<head>
+		<title>Glamour Memóriajáték</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
+		<meta property="og:url"           content="https://glamournapokjatek.glamour.hu/" />
+		<meta property="og:type"          content="game" />
+		<meta property="og:title"         content="Glamour Memory Game" />
+		<meta property="og:description"   content="Játssz velünk a szuper nyereményekért!" />
+		<!--<meta property="og:image"         content="https://www.your-domain.com/path/image.jpg" />-->
+
+		<!-- CSS -->
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"  >
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css" >
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Coda" >
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/sweetalert2/3.0.3/sweetalert2.min.css" >
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.css" >
+		<link rel="stylesheet" href="./css/mainstyle.css" >
+		<link rel="stylesheet" href="./css/form.css" >
+		<!-- Load Facebook SDK for JavaScript -->
+		<div id="fb-root"></div>
+		<script async defer crossorigin="anonymous" src="https://connect.facebook.net/hu_HU/sdk.js#xfbml=1&version=v3.2&appId=1623160281317273&autoLogAppEvents=1"></script>
+	</head>
+	<body>
+	  <div class="container">
+		  <div class='clone'>
+			<!--<header>
+			  <h1>Memóriajáték óriási nyereményekkel!</h1>
+			</header>-->
+			<section id="score-panel" class="score-panel">
+			  <ul class="stars">
+				<li><i class="fa fa-star"></i></li>
+				<li><i class="fa fa-star"></i></li>
+				<li><i class="fa fa-star"></i></li>
+			  </ul>
+			  <span class="moves">0</span> Lépés
+			  <div class="restart">
+				<i class="fa fa-repeat" onclick="refreshPage()"></i>
+			  </div>
+			</section>
+			<div class="timer">
+			  <!--<h2 id="stopWatch">01:00 </h2>-->
+			  <span class="minute">01</span>:<span class="second">00</span>
+			</div>
+			<div class="control">
+				<button id="start" button onClick="timer.start(1000)">Start</button>
+				<button id="stop" onClick="timer.stop()">Stop</button> 
+				<button id="reset" onClick="timer.reset(60)">Reset</button> 
+				<button id="countup" onClick="timer.mode(1)">Count up</button> 
+				<button id="countdown" onClick="timer.mode(0)">Count down</button>
+			</div>
+			<main>
+				<div class="deck">
+				</div>
+			</main>
+		  </div>
+	  </div>
+	
+	  <div class="fb-share-button" style="left: 25px;" data-href="https://glamournapokjatek.glamour.hu/" data-layout="button" data-size="large"><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fglamournapokjatek.glamour.hu%2F&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore">Megosztás</a></div>
+	
+	  	<!-- hidden  -->
+		<div class="col-12 overlay hidden">
+			<!-- multistep form -->
+			<form id="msform" class="needs-validation" novalidate="" >
+			  <!-- progressbar -->
+			  <ul id="progressbar">
+				<li class="active">Személyes adatok</li>
+				<li>Elérhetőség</li>
+				<li>Nyilatkozatok</li>
+			  </ul>
+			  <!-- fieldsets -->
+			  <fieldset>
+				<h2 class="fs-title">Név</h2>
+				<h3 class="fs-subtitle">Kérjük adja meg a nevét!</h3>
+				<input class="form-control" type="text" name="surname" id="surname" placeholder="Vezetéknév" required />
+				<div class="invalid-feedback">Kérjük írja be a vezetéknevét!</div>
+				<br />
+				<input class="form-control" type="text" name="forename" id="forename" placeholder="Keresztnév" required />
+				<div class="invalid-feedback">Kérjük írja be a keresztnevét!</div>
+				<input type="button" name="next" class="next action-button" id="next1" value="Következő" />
+			  </fieldset>
+			  <fieldset>
+				<h2 class="fs-title">Elérhetőség</h2>
+				<h3 class="fs-subtitle">Kérjük adja meg az elérhetőségét!</h3>
+				<input class="form-control" type="email" name="email" id="email" placeholder="Email" required />
+				<div class="invalid-feedback">Kérjük érvényes emailcímet adjon meg!</div>
+				<input class="form-control" type="phone" name="phone" placeholder="Telefonszám" />
+				<textarea class="form-control" name="address" placeholder="Irányítószám, utcanév, házszám"></textarea>
+				<input type="button" name="previous" class="previous action-button" value="Előző" />
+				<input type="button" name="next" class="next action-button" id="next2" value="Következő" />
+			  </fieldset>
+			  <fieldset>
+				<h2 class="fs-title">Nyilatkozatok</h2> 
+				<h3 class="fs-subtitle">Kérjük fogadja el a következő nyilatkozatokat!</h3>
+				<input  type="checkbox" id="checkbox1" name="rules" value = "1" required /><label for="cb1">Elfogadom a hivatalos játékszabályt</label>
+				<div class="invalid-feedback" id="invalid-feedback1">Kérjük fogadja el a szabályzatot!</div>
+				<input type="checkbox" id="checkbox2" name="data_handling" value = "1" required /> <label for="cb2"><a href="https://www.ringieraxelspringer.hu/wp-content/uploads/sites/4/2020/11/Weboldal-Adatkezelesi-Tajekoztato_Ringier-Axel-Springer-Magyarorszag.pdf" target="_blank">Elfogadom az adatkezelési tájékoztatót</a></label> 
+				<div class="invalid-feedback" id="invalid-feedback2" >Kérjük fogadja el a tájékoztatót!</div>
+				<input type="button" name="previous" class="previous action-button" value="Előző" /> 
+				<input type="submit" id="submit" name="submit" class="submit action-button" onclick = "return ValidateForm();" value="Küldés" /> 
+			  </fieldset>
+			</form>
+		</div>
+	</body>
+
+ <!-- Form javascript -->
+	
+	 <!-- jQuery first, then Popper.js -->
+	 <script src="https://apis.google.com/js/api.js" type="text/javascript"></script>
+    <script src="//code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+	<!-- Sweetalert Install-->
+	<script src="//cdn.jsdelivr.net/npm/sweetalert2@8"></script>
+	<!-- Optional: include a polyfill for ES6 Promises for IE11 and Android browser -->
+	<script src="//cdn.jsdelivr.net/npm/promise-polyfill"></script>
+    <!-- Optional JavaScript 
+	<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.2.2/jquery.min.js"> </script>-->
+	<!-- JavaScript for Multi Step Form-->
+	<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"> </script>
+	<script src="https://code.jquery.com/jquery-3.4.1.js" crossorigin="anonymous"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"> </script>
+	<!-- Optional Sweetalert
+	<!--<script src="//cdn.jsdelivr.net/sweetalert2/3.0.3/sweetalert2.min.js"> </script>
+	<!-- Main Js-->
+	<script src="./js/main.js" type="text/javascript"> </script>
+	<script src="./js/jquery.serialize-object.min.js" type="text/javascript"> </script>
+	<!-- Helpers -->
+	<script src="./helpers/buildQuery.js" type="text/javascript"> </script>
+	<!-- Bootstrap -->
+	<script src="//stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+	<!-- Optional Sweetalert Call-->
+	<!--<script>
+		Swal.fire({
+		 
+		})
+	</script>-->
+	<!-- Multi Step Form with Progress Bar using jQuery and CSS3 -->
+	
+	<script>
+		//jQuery time
+	var current_fs, next_fs, previous_fs; //fieldsets
+	var left, opacity, scale; //fieldset properties which we will animate
+	var animating; //flag to prevent quick multi-click glitches
+
+	$(".next").click(function(){
+		if(animating) return false;
+		animating = true;
+		
+		current_fs = $(this).parent();
+		next_fs = $(this).parent().next();
+		
+		//activate next step on progressbar using the index of next_fs
+		$("#progressbar li").eq($("fieldset").index(next_fs)).addClass("active");
+		
+		//show the next fieldset
+		next_fs.show(); 
+		//hide the current fieldset with style
+		current_fs.animate({opacity: 0}, {
+			step: function(now, mx) {
+				//as the opacity of current_fs reduces to 0 - stored in "now"
+				//1. scale current_fs down to 80%
+				scale = 1 - (1 - now) * 0.2;
+				//2. bring next_fs from the right(50%)
+				left = (now * 50)+"%";
+				//3. increase opacity of next_fs to 1 as it moves in
+				opacity = 1 - now;
+				current_fs.css({
+			'transform': 'scale('+scale+')',
+			'position': 'absolute'
+		  });
+				next_fs.css({'left': left, 'opacity': opacity});
+			}, 
+			duration: 800, 
+			complete: function(){
+				current_fs.hide();
+				animating = false;
+			}, 
+			//this comes from the custom easing plugin
+			easing: 'easeInOutBack'
+		});
+	});
+
+	$(".previous").click(function(){
+		if(animating) return false;
+		animating = true;
+		
+		current_fs = $(this).parent();
+		previous_fs = $(this).parent().prev();
+		
+		//de-activate current step on progressbar
+		$("#progressbar li").eq($("fieldset").index(current_fs)).removeClass("active");
+		
+		//show the previous fieldset
+		previous_fs.show(); 
+		//hide the current fieldset with style
+		current_fs.animate({opacity: 0}, {
+			step: function(now, mx) {
+				//as the opacity of current_fs reduces to 0 - stored in "now"
+				//1. scale previous_fs from 80% to 100%
+				scale = 0.8 + (1 - now) * 0.2;
+				//2. take current_fs to the right(50%) - from 0%
+				left = ((1-now) * 50)+"%";
+				//3. increase opacity of previous_fs to 1 as it moves in
+				opacity = 1 - now;
+				current_fs.css({'left': left});
+				previous_fs.css({'transform': 'scale('+scale+')', 'opacity': opacity});
+			}, 
+			duration: 800, 
+			complete: function(){
+				current_fs.hide();
+				animating = false;
+			}, 
+			//this comes from the custom easing plugin
+			easing: 'easeInOutBack'
+		});
+	});
+
+	$(".submit").click(function(){
+		return false;
+	})
+	</script>
+	<!-- Form validation -->
+	<script type="text/javascript">  
+	function ValidateForm()  
+	{  
+		var checkboxes = document.getElementsByName('checkbox');  
+		var numberOfCheckedItems = 0;
+		var surname = document.getElementById('surname'); 	
+		
+		for(var i = 0; i < checkboxes.length; i++)  
+		{  
+			if(checkboxes[i].checked)  
+				numberOfCheckedItems++;  
+		}  
+		/*if(numberOfCheckedItems < 2 )  
+		{  
+			alert("Mindkét nyilatkozat elfogadása kötelező!");  
+			return false;  
+		}*/
+		if(surname.value == "" )  
+		{  
+			alert("Vezetéknév megadása kötelező!");  
+			return false;  
+		}
+		if(forename.value == "" )  
+		{  
+			alert("Keresztnév megadása kötelező!");  
+			return false;  
+		}
+		if(email.value == "" )  
+		{  
+			alert("Emailcím megadása kötelező!");  
+			return false;  
+		}		
+		
+	}
+	
+	$(function () { 
+		var checkbox1 = document.getElementById('checkbox1');
+		$(".next").on("click", function (e) {
+			var form = $("#msform")[0];
+			var isValid = form.checkValidity();
+			if (!isValid) {
+				e.preventDefault();
+				e.stopPropagation();
+			}
+			form.classList.add('was-validated');
+			return false; // For testing only to stay on this page
+		});
+		
+		$("#next2").on("click", function (e) {
+			var checkBox = document.getElementById("checkbox1");
+			var invalid_feedback1 = document.getElementById("invalid-feedback1");
+			var valid_feedback1 = document.getElementById("valid-feedback1");
+			$("#checkbox1").on("click", function (e) {
+			  if (checkbox1.checked == false){
+				invalid_feedback1.style.display = "block";
+				valid_feedback1.style.display = "none";
+			  } else {
+				 invalid_feedback1.style.display = "none";
+				 valid_feedback1.style.display = "block";
+			  }
+			})
+		});
+		
+		$("#next2").on("click", function (e) {
+			var checkBox = document.getElementById("checkbox2");
+			var invalid_feedback2 = document.getElementById("invalid-feedback2");
+			var valid_feedback2 = document.getElementById("valid-feedback2");
+			$("#checkbox2").on("click", function (e) {
+			  if (checkbox2.checked == false){
+				invalid_feedback2.style.display = "block";
+				valid_feedback2.style.display = "none";
+			  } else {
+				 invalid_feedback2.style.display = "none";
+				 valid_feedback2.style.display = "block";
+			  }
+			})
+		});
+	});
+	</script>
+	<script>
+	var createdTime = function () {
+    var input = document.createElement("input");
+    var d = new Date();
+    var value = d.toLocaleString();
+
+    input.setAttribute("type", "hidden");
+    input.setAttribute("name", "created_at");
+    input.setAttribute("value", value);
+    //append to form element that you want .
+    document.getElementById("msform").appendChild(input);
+	}
+	window.onload = createdTime();
+	</script>
+	<!-- Data saving with apispreadsheets.com API with Google sheets as a Database
+		apispreadsheets.com API free account - login with rashu.development@gmail.com -->
+	<script>
+		$('#submit').on('click', function(e) {
+			
+			$.ajax({
+				/*apispreadsheets data url is hidden */
+				url:'https://api.apispreadsheets.com/data/****/',
+				type:'post',
+				data:$("form#msform").serializeArray(),
+				success: function(){
+				  alert("Az adatokat elküldtük, köszönjük!");
+				  location.reload();
+				},
+				error: function(){
+				  alert("Hiba történt!")
+				}
+			});
+		})
+	</script>
+</html>
