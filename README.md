@@ -16,7 +16,7 @@ No needed
 
 ## Enviroment
 
-in a test environment, the data is not sent to api.
+In a test environment, data is not sent to the api.
 
 ## Created
 
