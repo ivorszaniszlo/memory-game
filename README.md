@@ -14,6 +14,10 @@ Webserver (ex. apache), I recomend XAMPP to Windows.
 
 No needed
 
+## Enviroment
+
+in a test environment, the data is not sent to api.
+
 ## Created
 
 2019 and 2021
